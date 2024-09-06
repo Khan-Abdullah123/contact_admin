@@ -9,6 +9,11 @@
             font-size: 15px;
             cursor: pointer;
         }
+
+        .green-option {
+            background-color: green !important;
+            color: white !important;
+        }
     </style>
 
     <main>
@@ -182,16 +187,10 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <div>
-                            <h6 style="float: right;height: 35px;margin: 0; ">Filter By Tag: <span
-                                    id="current_tag"></span>
-                            </h6>
+                        <div class="d-flex justify-content-end align-items-center" style="    width: 59%; float: right;">
 
-                            <select id="tagSelect" class="mx-2" onchange="toggleTagFilter(this.value);">
-                                <option value="">Select a tag</option>
-                            </select>
+
                         </div>
-
                         <tbody>
                         </tbody>
                     </table>
@@ -219,15 +218,15 @@
 
         // FETCH DATATABLE
 
-
+        let ContactTable = "";
 
         function GetData() {
-            $('#contact_table').DataTable().destroy();
-            $('#contact_table').DataTable({
+            // Datatable.destroy();
+            ContactTable = $('#contact_table').DataTable({
                 ajax: {
                     url: "{{ route('ContactFetch') }}",
                     data: function(d) {
-                        console.log(tags);
+                        console.log('redoing vars');
 
                         if (tags.length > 0) {
                             d.tags = tags; // Send the array of selected tags
@@ -303,6 +302,10 @@
                 buttons: ['colvis', 'excel'],
                 dom: "Bfrtip",
                 initComplete: function(settings, json) {
+                    $('.dt-search').prepend(`<h6 style="float: left; height: 35px; padding-right: 21px;">Filter By Tag: <span id="current_tag"></span></h6>`);
+                    $('.dt-search').append(`<span class="mx-4"><label >Filter Select:</label><select id="tagSelect" style="margin-left: .5em;
+    display: inline-block;
+    width: auto;" class="form-control form-control-sm"  onchange="toggleTagFilter(this.value);"> <option value="">Select a tag</option></select></span>`)
                     TagSelect(); // Run the tag select function after DataTable is fully loaded
                 }
             });
@@ -331,10 +334,11 @@
             } else {
                 // Tag is not selected, add it
                 tags.push(tag);
+                $(`#tagSelect option[value='${tag}']`).addClass('green-option');
             }
 
             updateSelectedTagsUI(); // Update the UI with selected tags
-            GetData(); // Reload the DataTable with the updated tags
+            ContactTable.ajax.reload(); // Reload the DataTable with the updated tags
         }
 
         function updateSelectedTagsUI() {
@@ -363,6 +367,9 @@
                 option.value = tag;
                 option.textContent = tag;
                 tagSelect.appendChild(option);
+            });
+            tags.forEach(tag => {
+                $(`#tagSelect option[value='${tag}']`).addClass('green-option');
             });
         }
 
