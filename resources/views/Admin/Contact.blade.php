@@ -302,10 +302,14 @@
                 buttons: ['colvis', 'excel'],
                 dom: "Bfrtip",
                 initComplete: function(settings, json) {
-                    $('.dt-search').prepend(`<h6 style="float: left; height: 35px; padding-right: 21px;">Filter By Tag: <span id="current_tag"></span></h6>`);
-                    $('.dt-search').append(`<span class="mx-4"><label >Filter Select:</label><select id="tagSelect" style="margin-left: .5em;
+                    $('.dt-search').prepend(
+                        `<h6 style="float: left; height: 35px; padding-right: 21px;">Filter By Tag: <span id="current_tag"></span></h6>`
+                        );
+                    $('.dt-search').append(
+                        `<span class="mx-4"><label >Filter Select:</label><select id="tagSelect" style="margin-left: .5em;
     display: inline-block;
-    width: auto;" class="form-control form-control-sm"  onchange="toggleTagFilter(this.value);"> <option value="">Select a tag</option></select></span>`)
+    width: auto;" class="form-control form-control-sm"  onchange="toggleTagFilter(this.value);"> <option value="">Select a tag</option></select></span>`
+                        )
                     TagSelect(); // Run the tag select function after DataTable is fully loaded
                 }
             });

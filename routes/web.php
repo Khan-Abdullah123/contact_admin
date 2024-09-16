@@ -1,6 +1,8 @@
 <?php
 
 /** @var \Laravel\Lumen\Routing\Router $router */
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +17,25 @@
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
+});
+
+$router->get('EmailTest', function (Request $req) {
+    $count = $req->query('count', 0);
+
+    try {
+        Artisan::call('email:send-single', ['count' => $count]);
+        $output = Artisan::output();
+        return response()->json(['output' => $output]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+$router->get('EmailTest', function (Request $req) {
+    $count = $req->query('count', 0);
+    Artisan::call('email:send-single', ['count' => $count]);
+    $output = Artisan::output();
+    return response()->json(['output' => $output]);
 });
 
 
